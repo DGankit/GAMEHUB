@@ -70,6 +70,31 @@ const hangmanFigures = [
     ========`
 ];
 
+// Modal Logic
+const modal = document.getElementById('modal');
+const modalTitle = document.getElementById('modal-title');
+const modalMessage = document.getElementById('modal-message');
+const modalClose = document.getElementById('modal-close');
+
+function showModal(title, message) {
+    modalTitle.textContent = title;
+    modalMessage.textContent = message;
+    modal.style.display = 'flex';
+}
+
+function hideModal() {
+    modal.style.display = 'none';
+}
+
+modalClose.addEventListener('click', hideModal);
+
+// Close modal when clicking outside the modal content
+window.addEventListener('click', (event) => {
+    if (event.target === modal) {
+        hideModal();
+    }
+});
+
 function updateDisplay() {
     wordDisplay.textContent = guessedWord.join(' ');
     guessedLettersDisplay.textContent = `Guessed Letters: ${guessedLetters.join(', ')}`;
@@ -97,12 +122,12 @@ guessButton.addEventListener('click', () => {
     guessInput.value = '';
 
     if (guess.length !== 1 || !/[a-z]/.test(guess)) {
-        alert('Please enter a single letter.');
+        showModal('Invalid Input', 'Please enter a single letter.');
         return;
     }
 
     if (guessedLetters.includes(guess)) {
-        alert('You already guessed that letter.');
+        showModal('Invalid Input', 'You already guessed that letter.');
         return;
     }
 
@@ -121,10 +146,10 @@ guessButton.addEventListener('click', () => {
     updateDisplay();
 
     if (checkWin()) {
-        alert('Congratulations! You won!');
+        showModal('Congratulations!', 'You won!');
         resetGame();
     } else if (checkLose()) {
-        alert(`Game over! The word was "${selectedWord}".`);
+        showModal('Game Over', `The word was "${selectedWord}".`);
         resetGame();
     }
 });
